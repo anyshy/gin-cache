@@ -52,7 +52,7 @@ func WithLogger(l Logger) Option {
 
 // Logger define the logger interface
 type Logger interface {
-	Errorf(string, ...interface{})
+	Errorf(string, ...interface{}) error
 }
 
 // Discard the default logger that will discard all logs of gin-cache
@@ -60,7 +60,8 @@ type Discard struct {
 }
 
 // Errorf will output the log at error level
-func (l Discard) Errorf(string, ...interface{}) {
+func (l Discard) Errorf(string, ...interface{}) error {
+	return nil
 }
 
 // WithCacheStrategyByRequest set up the custom strategy by per request
