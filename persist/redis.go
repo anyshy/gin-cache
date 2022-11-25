@@ -1,11 +1,10 @@
 package persist
 
 import (
-	"context"
 	"errors"
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis"
 )
 
 // RedisStore store http response in redis
@@ -26,21 +25,17 @@ func (store *RedisStore) Set(key string, value interface{}, expire time.Duration
 	if err != nil {
 		return err
 	}
-
-	ctx := context.TODO()
-	return store.RedisClient.Set(ctx, key, payload, expire).Err()
+	return store.RedisClient.Set(key, payload, expire).Err()
 }
 
 // Delete remove key in redis, do nothing if key doesn't exist
 func (store *RedisStore) Delete(key string) error {
-	ctx := context.TODO()
-	return store.RedisClient.Del(ctx, key).Err()
+	return store.RedisClient.Del(key).Err()
 }
 
 // Get retrieves an item from redis, if key doesn't exist, return ErrCacheMiss
 func (store *RedisStore) Get(key string, value interface{}) error {
-	ctx := context.TODO()
-	payload, err := store.RedisClient.Get(ctx, key).Bytes()
+	payload, err := store.RedisClient.Get(key).Bytes()
 
 	if errors.Is(err, redis.Nil) {
 		return ErrCacheMiss
